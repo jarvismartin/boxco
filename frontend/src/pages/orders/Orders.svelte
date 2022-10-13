@@ -11,7 +11,7 @@
   // Observe changes to this seller's $sellerProducts
   $: console.log("ORDERS", $orders);
 
-  // If user is not a seller, disable inputs
+  // If user is NOT A SELLER, disable inputs
   const disabled = !Object.hasOwn($user, "sellerID");
 
   // Control showing the spinner
@@ -173,13 +173,15 @@
                 {disabled}
               />
             </div>
-            <div class="flex flex-1 justify-start">
-              <button
-                type="submit"
-                class="m-2 bg-slate-600 text-slate-300 hover:bg-slate-800 active:opacity-70"
-                >Update Order
-              </button>
-            </div>
+            {#if !disabled}
+              <div class="flex flex-1 justify-start">
+                <button
+                  type="submit"
+                  class="m-2 bg-slate-600 text-slate-300 hover:bg-slate-800 active:opacity-70"
+                  >Update Order
+                </button>
+              </div>
+            {/if}
           </div>
         </div>
       </form>
