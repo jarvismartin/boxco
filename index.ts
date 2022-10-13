@@ -324,8 +324,19 @@ api.post("/api/v1/orders", authenticateToken, async (req, res) => {
   const buyer_id = req.body.buyer_id;
   const seller_id = req.body.seller_id;
 
-  let orders = await data.getByLabel("label1", `order:${buyer_id}`);
-  console.log("ORDERS:", orders);
+  // Get buyer orders
+  let buyer_orders = await data.getByLabel("label1", `order:${buyer_id}`);
+  console.log("BUYER ORDERS:", buyer_orders);
+
+  let seller_orders = [];
+
+  // Get seller orders
+  if (seller_id) {
+    seller_orders = await data.getByLabel("label2", `order:${seller_id}`);
+    console.log("SELLER ORDERS:", seller_orders);
+  }
+
+  const orders = { buyer: buyer_orders, seller: seller_orders };
 
   // Return the results
   res.json(orders);
