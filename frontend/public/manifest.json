@@ -1,0 +1,11 @@
+{
+  "name": "Reebelo Case Study",
+  "short_name": "Reebelo PWA",
+  "version": "0.1.0",
+  "manifest_version": 2,
+  "icons": [],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#242424",
+  "theme_color": "#ea580c"
+}
