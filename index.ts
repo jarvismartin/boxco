@@ -331,7 +331,7 @@ api.post("/api/v1/orders", authenticateToken, async (req, res) => {
   let seller_orders = [];
 
   // Get seller orders
-  if (seller_id) {
+  if (seller_id.length > 1) {
     seller_orders = await data.getByLabel("label2", `order:${seller_id}`);
     console.log("SELLER ORDERS:", seller_orders);
   }

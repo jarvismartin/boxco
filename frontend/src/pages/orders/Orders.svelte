@@ -9,16 +9,20 @@
   import { currentOrder, msg, orders, user } from "../../lib/store";
 
   // Observe changes to this seller's $sellerProducts
-  $: console.log("ORDERS", $orders);
+  $: console.log("OBSERVING ORDERS", $orders);
 
   // If user is NOT A SELLER, disable inputs
   const disabled = !Object.hasOwn($user, "sellerID");
+  console.log("DISABLED?", disabled);
 
   // Control showing the spinner
   let fetching = true;
 
   async function fetchOrders() {
-    const seller_id = Object.hasOwn($user, "sellerID") ? $user.sellerID : null;
+    console.log("FETCH ORDERS");
+    const seller_id = !disabled ? $user.sellerID : "";
+    console.log("seller_id?", seller_id);
+
     const data = { buyer_id: $user.id, seller_id };
     const orders_response = await fetch(`/api/v1/orders`, {
       method: "POST",
@@ -28,14 +32,22 @@
       },
       body: JSON.stringify(data),
     });
+    console.log("FETCH ORDERS RESPONSE:", orders_response);
 
     const json = await orders_response.json();
+    console.log("JSON:", json);
 
     // buyer: {items: Array(n)}
     // seller: {items: Array(n)}
     // So, just take the array
     const buyer_items = json.buyer.items;
-    const seller_items = json.seller.items;
+    console.log("buyer_items:", buyer_items);
+
+    let seller_items;
+    if (json.seller.length > 0) {
+      seller_items = json.seller.items;
+      console.log("seller_items:", seller_items);
+    }
 
     // item: {key: string, value: object}
     // Strip keys, which are not used here,
@@ -43,10 +55,13 @@
     const buyer_arr = Object.entries(buyer_items).map((item) => {
       return item[1].value;
     });
-    const seller_arr = Object.entries(seller_items).map((item) => {
-      return item[1].value;
-    });
 
+    let seller_arr = [];
+    if (seller_items) {
+      seller_arr = Object.entries(seller_items).map((item) => {
+        return item[1].value;
+      });
+    }
     orders.set({
       buyer: buyer_arr,
       seller: seller_arr,
